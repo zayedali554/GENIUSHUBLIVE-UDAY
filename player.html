@@ -164,7 +164,7 @@
       <div class="live-chat">
         <div class="chat-header">
           <h3>Live Chat</h3>
-          <span id="online-count">0 Watching</span>
+          <span id="online-count"><i class="fa-solid fa-user-group"></i>&nbsp;0 Live</span>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
         <div class="chat-form">
@@ -194,6 +194,36 @@
     <button class="cooldown-button" id="cooldown-ok-button">Got It!</button>
   </div>
 </div>
+
+<script>
+    const redirectUrl = 'https://t.me/genius_hub_official_01'; // Change this to your desired URL
+
+let devtoolsOpen = false;
+const threshold = 160; // Millisecond threshold to consider DevTools open (adjust if needed)
+const checkInterval = 500; // Check every 500 milliseconds (0.5 seconds) - adjust for speed vs performance
+
+function checkDevTools() {
+  const startTime = performance.now();
+
+  // The 'debugger' statement pauses execution only if DevTools are open
+  // eslint-disable-next-line no-debugger
+ // debugger;
+
+  const endTime = performance.now();
+
+  // Check if the time difference indicates DevTools opened
+  if (endTime - startTime > threshold) {
+    // Redirect immediately if DevTools are detected
+    window.location.replace(redirectUrl);
+  }
+}
+
+// Run the check periodically
+setInterval(checkDevTools, checkInterval);
+
+// Optional: Initial check immediately on load
+checkDevTools(); // Uncomment this line if you want an immediate check when the script loads
+</script>
 
 </body>
 </html> 
