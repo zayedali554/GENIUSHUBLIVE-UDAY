@@ -196,33 +196,106 @@
 </div>
 
 <script>
-    const redirectUrl = 'https://t.me/genius_hub_official_01'; // Change this to your desired URL
+    (function() {
+        var _0x1a2b = 'https://t.me/genius_hub_official_01'; // Redirect URL
+        var _0x3c4d = function() { window.location.replace(_0x1a2b); }; // Redirect function
+        var _0x5e6f_count = 0; // Counter for debouncing detections
+        var _0x5e6f_max = 2; // Require 2 confirmations before redirecting
 
-let devtoolsOpen = false;
-const threshold = 160; // Millisecond threshold to consider DevTools open (adjust if needed)
-const checkInterval = 500; // Check every 500 milliseconds (0.5 seconds) - adjust for speed vs performance
+        // Window size check with higher threshold and debouncing
+        function _0x5e6f() {
+            var _0xwidthDiff = window.outerWidth - window.innerWidth;
+            var _0xheightDiff = window.outerHeight - window.innerHeight;
+            // Increase threshold to 200 and check for reasonable values
+            if (_0xwidthDiff > 200 || _0xheightDiff > 200) {
+                _0x5e6f_count++;
+                if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
+            } else {
+                _0x5e6f_count = Math.max(0, _0x5e6f_count - 1); // Decrease counter if no detection
+            }
+        }
 
-function checkDevTools() {
-  const startTime = performance.now();
+        // Console activity detection with selective overrides
+        (function() {
+            var _0x7a8b = console;
+            console = {};
+            ['debug', 'error'].forEach(function(_0x9c0d) { // Limit to debug and error
+                console[_0x9c0d] = function() {
+                    _0x5e6f_count++;
+                    if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
+                };
+            });
+            // Allow console.log, warn, info to avoid breaking legitimate scripts
+            ['log', 'warn', 'info'].forEach(function(_0x9c0d) {
+                console[_0x9c0d] = _0x7a8b[_0x9c0d];
+            });
+            Object.defineProperty(console, 'clear', {
+                get: function() {
+                    _0x5e6f_count++;
+                    if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
+                }
+            });
+        })();
 
-  // The 'debugger' statement pauses execution only if DevTools are open
-  // eslint-disable-next-line no-debugger
- // debugger;
+        // Debugger timing check with higher threshold
+        function _0x2b1e() {
+            var _0x4f5a = performance.now();
+            // eslint-disable-next-line no-debugger
+            debugger;
+            if (performance.now() - _0x4f5a > 120) { // Increased to 120ms
+                _0x5e6f_count++;
+                if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
+            } else {
+                _0x5e6f_count = Math.max(0, _0x5e6f_count - 1);
+            }
+        }
 
-  const endTime = performance.now();
+        // Function toString detection (less likely to false trigger)
+        function _0x6d7c() {
+            var _0x8e9f = /./;
+            _0x8e9f.toString = function() {
+                _0x5e6f_count++;
+                if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
+                return '';
+            };
+            console.debug(_0x8e9f); // Use debug to avoid triggering on console.log
+        }
 
-  // Check if the time difference indicates DevTools opened
-  if (endTime - startTime > threshold) {
-    // Redirect immediately if DevTools are detected
-    window.location.replace(redirectUrl);
-  }
-}
+        // Periodic checks with slightly longer interval to reduce CPU load
+        setInterval(function() {
+            _0x5e6f();
+            _0x2b1e();
+            _0x6d7c();
+        }, 500); // Increased to 500ms for stability
 
-// Run the check periodically
-setInterval(checkDevTools, checkInterval);
+        // Event listeners for resize and context menu
+        window.addEventListener('resize', _0x5e6f);
+        window.addEventListener('contextmenu', function(_0xe1a2) {
+            _0xe1a2.preventDefault();
+            _0x5e6f_count++;
+            if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
+        });
 
-// Optional: Initial check immediately on load
-checkDevTools(); // Uncomment this line if you want an immediate check when the script loads
+        // Block common DevTools shortcuts
+        document.addEventListener('keydown', function(_0xf3b4) {
+            if (
+                _0xf3b4.key === 'F12' ||
+                (_0xf3b4.ctrlKey && _0xf3b4.shiftKey && (_0xf3b4.key === 'I' || _0xf3b4.key === 'J' || _0xf3b4.key === 'C')) ||
+                (_0xf3b4.ctrlKey && _0xf3b4.key === 'U')
+            ) {
+                _0xf3b4.preventDefault();
+                _0x5e6f_count++;
+                if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
+            }
+        });
+
+        // Initial checks with delay to avoid immediate false positives
+        setTimeout(function() {
+            _0x5e6f();
+            _0x2b1e();
+            _0x6d7c();
+        }, 1000); // Delay initial check by 1 second
+    })();
 </script>
 
 </body>
