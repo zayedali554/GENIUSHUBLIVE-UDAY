@@ -6,14 +6,14 @@
     <title>Genius Hub - UDAY</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <link rel="icon" type="image/png" sizes="any" href="res/logo.jpg">
+   
+        <link rel="icon" type="image/png" sizes="any" href="res/logo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="chat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script disable-devtool-auto="true" src="https://cdn.jsdelivr.net/npm/disable-devtool" clear-log="true"
-        disable-select="true" disable-copy="true" disable-cut="true" disable-paste="false"></script>
+        disable-select="true" disable-copy="true" disable-cut="true" disable-paste="false"></script> 
 </head>
 
 <body>
@@ -188,7 +188,7 @@
     <div class="container">
         <div class="video-chat-wrapper">
 
-            <!-- Firebase Live Chat Container -->
+
             <div class="live-chat">
                 <div class="chat-header">
                     <h3>Live Chat</h3>
@@ -230,34 +230,36 @@
     </footer>
 
     <script>
-        const redirectUrl = 'https://t.me/genius_hub_official_01'; // Change this to your desired URL
+const redirectUrl = 'https://t.me/genius_hub_official_01';
+const checkInterval = 500;
+let hasRedirected = false;
 
-        let devtoolsOpen = false;
-        const threshold = 160; // Millisecond threshold to consider DevTools open (adjust if needed)
-        const checkInterval = 500; // Check every 500 milliseconds (0.5 seconds) - adjust for speed vs performance
+function isDevToolsOpen() {
+    // Higher threshold to avoid false positives from browser UI or extensions
+    const widthThreshold = window.outerWidth - window.innerWidth > 500;
+    const heightThreshold = window.outerHeight - window.innerHeight > 500;
 
-        function checkDevTools() {
-            const startTime = performance.now();
+    // For debugging purposes (remove in production)
+    console.log('widthDiff:', window.outerWidth - window.innerWidth, 'heightDiff:', window.outerHeight - window.innerHeight);
 
-            // The 'debugger' statement pauses execution only if DevTools are open
-            // eslint-disable-next-line no-debugger
-            // debugger;
+    return widthThreshold || heightThreshold;
+}
 
-            const endTime = performance.now();
+function checkDevTools() {
+    if (isDevToolsOpen() && !hasRedirected) {
+        hasRedirected = true;
+        window.location.replace(redirectUrl);
+    }
+}
 
-            // Check if the time difference indicates DevTools opened
-            if (endTime - startTime > threshold) {
-                // Redirect immediately if DevTools are detected
-                window.location.replace(redirectUrl);
-            }
-        }
-
-        // Run the check periodically
-        setInterval(checkDevTools, checkInterval);
-
-        // Optional: Initial check immediately on load
-        checkDevTools(); // Uncomment this line if you want an immediate check when the script loads
+// Delay initial check to allow window sizes to stabilize
+setTimeout(() => {
+    checkDevTools();
+    // Start periodic checks after initial delay
+    setInterval(checkDevTools, checkInterval);
+}, 1000);
     </script>
+
 </body>
 
 </html>
