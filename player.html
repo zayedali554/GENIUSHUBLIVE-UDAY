@@ -227,96 +227,89 @@
 (function() {
     // Configuration
     const redirectUrl = 'https://t.me/genius_hub_official_01';
-    const detectionThreshold = 5; // Number of confirmations needed
+    const detectionThreshold = 7; // Increased threshold
     let detectionCount = 0;
+    let initialized = false;
     
-    // 1. Window Size Difference Detection (Improved)
-    function checkWindowSize() {
-        const widthDiff = window.outerWidth - window.innerWidth;
-        const heightDiff = window.outerHeight - window.innerHeight;
+    // 1. Only activate protections after delay
+    setTimeout(initializeProtections, 2000); // 2 second delay
+    
+    function initializeProtections() {
+        initialized = true;
         
-        // More precise thresholds
-        if ((widthDiff > 150 && widthDiff < 500) || 
-            (heightDiff > 150 && heightDiff < 500)) {
-            detectionCount++;
+        // 2. Window Size Difference Detection (Less sensitive)
+        function checkWindowSize() {
+            if (!initialized) return;
+            
+            const widthDiff = window.outerWidth - window.innerWidth;
+            const heightDiff = window.outerHeight - window.innerHeight;
+            
+            // Only trigger if both dimensions show devtools-like differences
+            if (widthDiff > 200 && heightDiff > 200 && 
+                widthDiff < 500 && heightDiff < 500) {
+                detectionCount++;
+            }
         }
-    }
 
-    // 2. Debugger Timing Attack (More Reliable)
-    function debuggerCheck() {
-        const start = performance.now();
-        (function(){}).constructor("debugger")();
-        if (performance.now() - start > 100) {
-            detectionCount += 2; // Higher weight for this detection
+        // 3. Debugger Check with try-catch
+        function debuggerCheck() {
+            if (!initialized) return;
+            
+            try {
+                const start = performance.now();
+                (function(){})["constructor"]("debugger")();
+                if (performance.now() - start > 80) {
+                    detectionCount += 2;
+                }
+            } catch(e) {
+                // Ignore errors
+            }
         }
-    }
 
-    // 3. Function toString Tampering Detection
-    function functionToStringCheck() {
-        const fn = function() {};
-        const original = fn.toString();
-        fn.toString = function() {
-            detectionCount += 2;
-            return original;
-        };
-        console.log('', fn); // Trigger toString
-        fn.toString = original; // Reset
-    }
-
-    // 4. Console Tampering Detection
-    function setupConsoleTraps() {
+        // 4. Console Protection (Only override after initialization)
         const consoleMethods = ['debug', 'error', 'clear'];
         consoleMethods.forEach(method => {
             const original = console[method];
             console[method] = function() {
-                detectionCount++;
+                if (initialized) detectionCount++;
                 original.apply(this, arguments);
             };
         });
-    }
 
-    // 5. DevTools Shortcut Blocking
-    function blockShortcuts() {
+        // 5. Periodic checks with initialization check
+        const checkInterval = setInterval(() => {
+            if (!initialized) return;
+            
+            checkWindowSize();
+            debuggerCheck();
+            
+            if (detectionCount >= detectionThreshold) {
+                clearInterval(checkInterval);
+                window.location.href = redirectUrl;
+            }
+        }, 1000); // Check every second
+
+        // 6. Event listeners with initialization check
         document.addEventListener('keydown', (e) => {
+            if (!initialized) return;
+            
             if (e.key === 'F12' ||
-                (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key)) ||
-                (e.ctrlKey && e.key === 'U')) {
+                (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) {
                 e.preventDefault();
                 detectionCount += 2;
             }
         });
+
+        // 7. Less aggressive right-click handling
+        document.addEventListener('contextmenu', (e) => {
+            if (!initialized) return;
+            
+            if (detectionCount > detectionThreshold/2) {
+                e.preventDefault();
+                detectionCount++;
+            }
+        });
     }
-
-    // 6. Periodic Checks with Backoff
-    let checkInterval = setInterval(() => {
-        checkWindowSize();
-        debuggerCheck();
-        functionToStringCheck();
-        
-        if (detectionCount >= detectionThreshold) {
-            clearInterval(checkInterval);
-            window.location.href = redirectUrl;
-        }
-    }, 800); // Slightly randomized interval would be better
-
-    // Initial setup
-    setupConsoleTraps();
-    blockShortcuts();
-
-    // 7. Mutation Observer for Element Inspection
-    new MutationObserver(() => {
-        detectionCount++;
-    }).observe(document, {
-        attributes: true,
-        childList: true,
-        subtree: true
-    });
-
-    // 8. Prevent Right Click Inspection
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        detectionCount++;
-    });
 })();
     </script>
 
