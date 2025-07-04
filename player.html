@@ -224,101 +224,100 @@
     </div>
     
         <script>
-        (function () {
-            var _0x1a2b = 'https://t.me/genius_hub_official_01'; // Redirect URL
-            var _0x3c4d = function () { window.location.replace(_0x1a2b); }; // Redirect function
-            var _0x5e6f_count = 0; // Counter for debouncing detections
-            var _0x5e6f_max = 10; // Require 2 confirmations before redirecting
+(function() {
+    // Configuration
+    const redirectUrl = 'https://t.me/genius_hub_official_01';
+    const detectionThreshold = 5; // Number of confirmations needed
+    let detectionCount = 0;
+    
+    // 1. Window Size Difference Detection (Improved)
+    function checkWindowSize() {
+        const widthDiff = window.outerWidth - window.innerWidth;
+        const heightDiff = window.outerHeight - window.innerHeight;
+        
+        // More precise thresholds
+        if ((widthDiff > 150 && widthDiff < 500) || 
+            (heightDiff > 150 && heightDiff < 500)) {
+            detectionCount++;
+        }
+    }
 
-            // Window size check with higher threshold and debouncing
-            function _0x5e6f() {
-                var _0xwidthDiff = window.outerWidth - window.innerWidth;
-                var _0xheightDiff = window.outerHeight - window.innerHeight;
-                // Increase threshold to 200 and check for reasonable values
-                if (_0xwidthDiff > 200 && _0xheightDiff > 200) {
-                    _0x5e6f_count++;
-                    if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
-                } else {
-                    _0x5e6f_count = Math.max(0, _0x5e6f_count - 1); // Decrease counter if no detection
-                }
+    // 2. Debugger Timing Attack (More Reliable)
+    function debuggerCheck() {
+        const start = performance.now();
+        (function(){}).constructor("debugger")();
+        if (performance.now() - start > 100) {
+            detectionCount += 2; // Higher weight for this detection
+        }
+    }
+
+    // 3. Function toString Tampering Detection
+    function functionToStringCheck() {
+        const fn = function() {};
+        const original = fn.toString();
+        fn.toString = function() {
+            detectionCount += 2;
+            return original;
+        };
+        console.log('', fn); // Trigger toString
+        fn.toString = original; // Reset
+    }
+
+    // 4. Console Tampering Detection
+    function setupConsoleTraps() {
+        const consoleMethods = ['debug', 'error', 'clear'];
+        consoleMethods.forEach(method => {
+            const original = console[method];
+            console[method] = function() {
+                detectionCount++;
+                original.apply(this, arguments);
+            };
+        });
+    }
+
+    // 5. DevTools Shortcut Blocking
+    function blockShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key)) ||
+                (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                detectionCount += 2;
             }
+        });
+    }
 
-            // Console activity detection with selective overrides
-            (function () {
-                var _0x7a8b = console;
-                console = {};
-                ['debug', 'error'].forEach(function (_0x9c0d) { // Limit to debug and error
-                    console[_0x9c0d] = function () {
-                        _0x5e6f_count++;
-                        if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
-                    };
-                });
-                // Allow console.log, warn, info to avoid breaking legitimate scripts
-                ['log', 'warn', 'info'].forEach(function (_0x9c0d) {
-                    console[_0x9c0d] = _0x7a8b[_0x9c0d];
-                });
-                Object.defineProperty(console, 'clear', {
-                    get: function () {
-                        _0x5e6f_count++;
-                        if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
-                    }
-                });
-            })();
+    // 6. Periodic Checks with Backoff
+    let checkInterval = setInterval(() => {
+        checkWindowSize();
+        debuggerCheck();
+        functionToStringCheck();
+        
+        if (detectionCount >= detectionThreshold) {
+            clearInterval(checkInterval);
+            window.location.href = redirectUrl;
+        }
+    }, 800); // Slightly randomized interval would be better
 
-            // Debugger timing check with higher threshold
-            function _0x2b1e() {
-                var _0x4f5a = performance.now();
-                // eslint-disable-next-line no-debugger
-                debugger;
-                if (performance.now() - _0x4f5a > 120) { // Increased to 120ms
-                    _0x5e6f_count++;
-                    if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
-                } else {
-                    _0x5e6f_count = Math.max(0, _0x5e6f_count - 1);
-                }
-            }
+    // Initial setup
+    setupConsoleTraps();
+    blockShortcuts();
 
-            // Function toString detection (less likely to false trigger)
-            function _0x6d7c() {
-                var _0x8e9f = /./;
-                _0x8e9f.toString = function () {
-                    _0x5e6f_count++;
-                    if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
-                    return '';
-                };
-                console.debug(_0x8e9f); // Use debug to avoid triggering on console.log
-            }
+    // 7. Mutation Observer for Element Inspection
+    new MutationObserver(() => {
+        detectionCount++;
+    }).observe(document, {
+        attributes: true,
+        childList: true,
+        subtree: true
+    });
 
-            // Periodic checks with slightly longer interval to reduce CPU load
-            setInterval(function () {
-                _0x5e6f();
-                _0x2b1e();
-                _0x6d7c();
-            }, 1000); // Increased to 500ms for stability
-
-            // Event listeners for resize and context menu
-            window.addEventListener('resize', _0x5e6f);
-
-            // Block common DevTools shortcuts
-            document.addEventListener('keydown', function (_0xf3b4) {
-                if (
-                    _0xf3b4.key === 'F12' ||
-                    (_0xf3b4.ctrlKey && _0xf3b4.shiftKey && (_0xf3b4.key === 'I' || _0xf3b4.key === 'J' || _0xf3b4.key === 'C')) ||
-                    (_0xf3b4.ctrlKey && _0xf3b4.key === 'U')
-                ) {
-                    _0xf3b4.preventDefault();
-                    _0x5e6f_count++;
-                    if (_0x5e6f_count >= _0x5e6f_max) _0x3c4d();
-                }
-            });
-
-            // Initial checks with delay to avoid immediate false positives
-            setTimeout(function () {
-                _0x5e6f();
-                _0x2b1e();
-                _0x6d7c();
-            }, 1000); // Delay initial check by 1 second
-        })();
+    // 8. Prevent Right Click Inspection
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        detectionCount++;
+    });
+})();
     </script>
 
 <footer class="site-footer">
