@@ -222,102 +222,42 @@
             <button class="cooldown-button" id="cooldown-ok-button">Got It!</button>
         </div>
     </div>
-    
-        <script>
-(function() {
-    // Configuration
-    const redirectUrl = 'https://t.me/genius_hub_official_01';
-    const detectionThreshold = 7; // Increased threshold
-    let detectionCount = 0;
-    let initialized = false;
-    
-    // 1. Only activate protections after delay
-    setTimeout(initializeProtections, 2000); // 2 second delay
-    
-    function initializeProtections() {
-        initialized = true;
-        
-        // 2. Window Size Difference Detection (Less sensitive)
-        function checkWindowSize() {
-            if (!initialized) return;
-            
-            const widthDiff = window.outerWidth - window.innerWidth;
-            const heightDiff = window.outerHeight - window.innerHeight;
-            
-            // Only trigger if both dimensions show devtools-like differences
-            if (widthDiff > 200 && heightDiff > 200 && 
-                widthDiff < 500 && heightDiff < 500) {
-                detectionCount++;
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 <a href="https://t.me/genius_hub_official_01">Genius Hub</a>. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const redirectUrl = 'https://t.me/genius_hub_official_01'; // Change this to your desired URL
+
+        let devtoolsOpen = false;
+        const threshold = 160; // Millisecond threshold to consider DevTools open (adjust if needed)
+        const checkInterval = 500; // Check every 500 milliseconds (0.5 seconds) - adjust for speed vs performance
+
+        function checkDevTools() {
+            const startTime = performance.now();
+
+            // The 'debugger' statement pauses execution only if DevTools are open
+            // eslint-disable-next-line no-debugger
+            // debugger;
+
+            const endTime = performance.now();
+
+            // Check if the time difference indicates DevTools opened
+            if (endTime - startTime > threshold) {
+                // Redirect immediately if DevTools are detected
+                window.location.replace(redirectUrl);
             }
         }
 
-        // 3. Debugger Check with try-catch
-        function debuggerCheck() {
-            if (!initialized) return;
-            
-            try {
-                const start = performance.now();
-                (function(){})["constructor"]("debugger")();
-                if (performance.now() - start > 80) {
-                    detectionCount += 2;
-                }
-            } catch(e) {
-                // Ignore errors
-            }
-        }
+        // Run the check periodically
+        setInterval(checkDevTools, checkInterval);
 
-        // 4. Console Protection (Only override after initialization)
-        const consoleMethods = ['debug', 'error', 'clear'];
-        consoleMethods.forEach(method => {
-            const original = console[method];
-            console[method] = function() {
-                if (initialized) detectionCount++;
-                original.apply(this, arguments);
-            };
-        });
-
-        // 5. Periodic checks with initialization check
-        const checkInterval = setInterval(() => {
-            if (!initialized) return;
-            
-            checkWindowSize();
-            debuggerCheck();
-            
-            if (detectionCount >= detectionThreshold) {
-                clearInterval(checkInterval);
-                window.location.href = redirectUrl;
-            }
-        }, 1000); // Check every second
-
-        // 6. Event listeners with initialization check
-        document.addEventListener('keydown', (e) => {
-            if (!initialized) return;
-            
-            if (e.key === 'F12' ||
-                (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) {
-                e.preventDefault();
-                detectionCount += 2;
-            }
-        });
-
-        // 7. Less aggressive right-click handling
-        document.addEventListener('contextmenu', (e) => {
-            if (!initialized) return;
-            
-            if (detectionCount > detectionThreshold/2) {
-                e.preventDefault();
-                detectionCount++;
-            }
-        });
-    }
-})();
+        // Optional: Initial check immediately on load
+        checkDevTools(); // Uncomment this line if you want an immediate check when the script loads
     </script>
-
-<footer class="site-footer">
-    <div class="footer-content">
-        <p>&copy; 2025 <a href="https://t.me/genius_hub_official_01">Genius Hub</a>. All Rights Reserved.</p>
-    </div>
-</footer>
 </body>
 
 </html>
