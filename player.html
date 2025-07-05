@@ -18,6 +18,16 @@
 
 <body>
 
+ <div id="telegramPopup" class="popup">
+        <div class="popup-content">
+            <span class="popup-close">×</span>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Icon" class="telegram-icon">
+            <h2>Join Our Telegram Channel!</h2>
+            <p>All lectures are uploaded here first !</p>
+            <a href="https://t.me/genius_hub_official_01" target="_blank" class="telegram-btn">Join Now</a>
+        </div>
+    </div>
+
     <header>
         <h1 class="title">Genius Hub</h1>
     </header>
@@ -228,6 +238,30 @@
             <p>&copy; 2025 <a href="https://t.me/genius_hub_official_01">Genius Hub</a>. All Rights Reserved.</p>
         </div>
     </footer>
+
+     <script>
+        // Popup functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const popup = document.getElementById('telegramPopup');
+            const closeBtn = document.querySelector('.popup-close');
+            popup.style.zIndex = '1000'; // Ensure popup is on top
+
+            // Show popup on page load
+            popup.style.display = 'flex';
+
+            // Close popup when close button is clicked
+            closeBtn.addEventListener('click', () => {
+                popup.style.display = 'none';
+            });
+
+            // Close popup when clicking outside the popup content
+            window.addEventListener('click', (event) => {
+                if (event.target === popup) {
+                    popup.style.display = 'none';
+                }
+            });
+        });
+    </script>
 
     <script>
 const redirectUrl = 'https://t.me/genius_hub_official_01';
