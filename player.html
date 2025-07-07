@@ -197,6 +197,9 @@
 
     <div class="container">
         <div class="video-chat-wrapper">
+            <button id="scroll-to-bottom-btn" class="scroll-to-bottom-btn" title="Scroll to Bottom">
+                <i class="fas fa-arrow-down"></i>
+            </button>
 
 
             <div class="live-chat">
@@ -204,7 +207,14 @@
                     <h3>Live Chat</h3>
                     <span id="online-count"><i class="fa-solid fa-user-group"></i>&nbsp;0 Live</span>
                 </div>
-                <div class="chat-messages" id="chat-messages"></div>
+                <div id="pinned-message-container" class="pinned-message-container"></div>
+                <div id="poll-container" class="poll-container"></div>
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be loaded here -->
+                </div>
+                <button id="scroll-to-bottom-btn" class="scroll-to-bottom-btn" title="Scroll to Bottom">
+                    <i class="fas fa-arrow-down"></i>
+                </button>
                 <div class="chat-form">
                     <i id="change-username-icon" class="fas fa-user-edit current-username"></i>
                     <input type="text" id="message-input" placeholder="Chat Now...">

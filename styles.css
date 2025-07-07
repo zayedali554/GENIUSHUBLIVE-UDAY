@@ -70,6 +70,7 @@ body {
   padding: 0;
   box-shadow: none;
   border: none;
+  margin: 0 auto;
 }
 
 /* Video Container */
@@ -84,7 +85,6 @@ body {
 video {
   width: 100%;
   display: block;
-  max-width: 40vw;
   object-fit: contain;
   height: auto;
 }
@@ -122,7 +122,37 @@ video {
     white-space: nowrap; /* Prevent text from wrapping */
 }
 
+/* Scroll to Bottom Button */
+.scroll-to-bottom-btn {
+    position: absolute;
+    bottom: 70px; /* Position above the chat input */
+    right: 15px; /* Adjust as needed */
+    background-color: var(--primary); /* Using a defined primary color */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px; /* Smaller size */
+    height: 40px; /* Smaller size */
+    font-size: 20px; /* Smaller icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100; /* Ensure it's above other elements */
+    opacity: 0; /* Initially hidden */
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
 
+.scroll-to-bottom-btn.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-to-bottom-btn:hover {
+    background-color: var(--primary-dark);
+}
 
 .controls button {
   width: 30px;
@@ -291,6 +321,38 @@ video {
 
 .message-text {
   word-wrap: break-word;
+}
+
+/* ------------------ Enhanced Message Styles ------------------ */
+.pinned-message,
+.poll-message {
+  background: radial-gradient(circle at top left, #16213e 0%, #0f3460 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  border-left: 6px solid #45c8e9; /* More prominent border */
+  padding: 12px; /* Add some padding */
+  border-radius: 8px; /* Match message border-radius */
+  margin-bottom: 10px; /* Space between messages */
+}
+
+.poll-message-header i {
+  color: white; /* Ensure the icon color is white */
+}
+
+.admin-message {
+  background: rgba(27, 111, 245, 0.15); /* dark blue translucent */
+  border-left: 4px solid #1b6ff5;
+  box-shadow: 0 1px 4px rgba(27, 111, 245, 0.3);
+}
+
+.admin-message .message-username {
+  color: #ffffff !important;
+  font-weight: 600;
+  text-shadow: 0 0 6px rgba(255,215,0,0.8);
+  display: inline;
+}
+
+.admin-message .message-username .fa-crown {
+  color: #ffd700;
 }
 
 .message-time {
@@ -1006,6 +1068,12 @@ video {
 }
 
 /* Media Queries */
+@media (min-width: 769px) {
+  .player-wrapper {
+    max-width: 800px;
+  }
+}
+
 @media (max-width: 768px) {
   .container {
     width: 95%;
@@ -1019,24 +1087,31 @@ video {
 
   .video-container {
     max-width: 90vw;
-    max-height: 40vh;
   }
 
   video {
     max-width: 90vw;
-    max-height: 40vh;
     height: auto;
   }
 
   .player-wrapper {
     max-width: 90vw;
-    max-height: 40vh;
   }
 
   .controls {
-    gap: 5px;
+    gap: 10px;
     padding: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
+
+  .controls #playpause { order: 1; }
+  .controls .rewind-forward { order: 2; }
+  .controls #current { order: 3; }
+  .controls #duration { order: 4; }
+  .controls #seek { order: 5; flex-basis: 100%; }
+  .controls #settings { order: 6; }
+  .controls #fullscreen { order: 7; }
 
   .controls button {
     width: 30px;
@@ -1060,9 +1135,8 @@ video {
   }
 
   .controls input[type=range] {
-    max-width: 80px;
+    
   }
-
 
   .settings-menu {
     right: 45px;
@@ -1135,6 +1209,15 @@ video {
 }
 
 @media (max-width: 480px) {
+  /* three-line mobile layout */
+  .controls #playpause { order: 1; }
+  .controls .rewind-forward { order: 2; }
+  .controls #current { order: 3; }
+  .controls #duration { order: 4; }
+  .controls #seek { order: 5; flex-basis: 100%; margin:6px 0; }
+  .controls #settings { order: 6; }
+  .controls #fullscreen { order: 7; }
+
   .controls button {
     width: 25px;
     height: 25px;
@@ -1147,18 +1230,15 @@ video {
 
   .video-container {
     max-width: 85vw;
-    max-height: 30vh;
   }
 
   video {
     max-width: 85vw;
-    max-height: 30vh;
     height: auto;
   }
 
   .player-wrapper {
     max-width: 85vw;
-    max-height: 30vh;
   }
 
   #message-input {
@@ -1167,7 +1247,7 @@ video {
     max-width: calc(100% - 80px);
   }
 
- .controls input[type=range] {
+  .controls input[type=range] {
     max-width: 80px;
   }
 
@@ -1348,4 +1428,166 @@ video {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+.pinned-message-container {
+    padding: 0 15px;
+    margin-bottom: 10px;
+}
+
+.pinned-message {
+    background-color: #0f3460;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    border-left: 4px solid #45c8e9;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.pinned-message-header {
+    font-weight: bold;
+    color: #45c8e9;
+    margin-bottom: 5px;
+    font-size: 0.8em;
+}
+
+.pinned-message-content {
+    color: #e6e6e6;
+    word-wrap: break-word;
+}
+
+.username-modal button:hover {
+    background-color: #d13354;
+}
+
+/* ---------------------- Poll Feature Styles ---------------------- */
+.poll-container {
+  padding: 0 15px;
+  margin-bottom: 10px;
+}
+
+.poll-question {
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.poll-option-btn {
+  padding: 8px 12px;
+  background-color: #0f3460;
+  border: none;
+  border-radius: 5px;
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.poll-option-btn:hover {
+  background-color: #1a3a6a;
+}
+
+.poll-option-btn.voted {
+  background-color: rgba(27,111,245,0.25);
+}
+
+.poll-results {
+  font-size: 0.85em;
+  color: #e6e6e6;
+  margin-top: 6px;
+}
+
+.poll-count {
+  font-size: 0.8em;
+  color: #ffcc00;
+  margin-left: 6px;
+}
+
+.poll-message {
+  background-color: #0f3460;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  border-left: 4px solid #ffcc00;
+  animation: fadeIn 0.3s ease-in-out;
+  position: relative;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.6);
+}
+
+/* header row styling */
+.poll-message-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer; /* Indicate it's clickable */
+}
+
+.poll-message.collapsed .poll-question,
+.poll-message.collapsed .poll-options {
+    display: none;
+}
+
+.poll-message.collapsed {
+    /* Adjust height or padding when collapsed if necessary */
+    /* For example, to reduce the overall height of the collapsed poll */
+    padding-bottom: 5px; /* Or adjust as needed */
+}
+
+
+/* option buttons redesigned */
+.poll-option-btn {
+  background-color: #1b2e42; /* Very dark blue for unselected */
+  color: white;
+  padding: 8px 15px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.95em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.poll-option-btn:hover {
+  background-color: #203040; /* Slightly lighter on hover for unselected */
+  transform: translateY(-2px);
+}
+
+.poll-option-btn.voted {
+  background-color: #2c3e50; /* Dark blue for voted option */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  border-color: #2c3e50;
+}
+
+.poll-count {
+  font-size: 0.8em;
+  color: #00ff2f;
+  margin-left: 8px;
+}
+
+/* progress bar */
+.poll-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background: #45c8e9;
+  width: 0%;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  transition: width 0.3s;
 }
