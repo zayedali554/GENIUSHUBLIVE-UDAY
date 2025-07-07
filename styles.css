@@ -375,6 +375,11 @@ video {
   font-size: 0.9em;
 }
 
+/* Collapse/Expand Chat */
+.live-chat.collapsed > *:not(.chat-header) {
+  display: none;
+}
+
 /* Chat Form */
 .chat-form {
   display: flex;
