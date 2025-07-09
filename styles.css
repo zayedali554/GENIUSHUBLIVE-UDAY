@@ -78,6 +78,7 @@ body {
   position: relative;
   overflow: hidden;
   background: #000;
+  width: 800px;
   box-shadow: none;
   border: none;
 }
@@ -94,7 +95,7 @@ video {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 3, 44, 0.476);
   padding: 10px;
   margin-top: 0;
   border-top: none;
@@ -248,8 +249,8 @@ video {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 12px 12px;
+  background: #000f3255;
+  border-radius: 12px;
 }
 
 .chat-messages {
@@ -265,8 +266,11 @@ video {
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  background: rgba(0, 0, 0, 0.2);
+  background: #00102bcc;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
 .chat-header h3 {
@@ -307,7 +311,7 @@ video {
   margin: 10px 0;
   padding: 10px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: none;
   animation: fadeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   transform-origin: top center;
   will-change: transform, opacity;
@@ -328,7 +332,6 @@ video {
 .poll-message {
   background: radial-gradient(circle at top left, #16213e 0%, #0f3460 100%);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-  border-left: 6px solid #45c8e9; /* More prominent border */
   padding: 12px; /* Add some padding */
   border-radius: 8px; /* Match message border-radius */
   margin-bottom: 10px; /* Space between messages */
@@ -340,7 +343,7 @@ video {
 
 .admin-message {
   background: rgba(27, 111, 245, 0.15); /* dark blue translucent */
-  border-left: 4px solid #1b6ff5;
+  border-left: 4px solid #00ff55;
   box-shadow: 0 1px 4px rgba(27, 111, 245, 0.3);
 }
 
@@ -1373,14 +1376,15 @@ video {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 11, 25, 0.454);
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(5px);
     z-index: 100000 !important; 
 }
 
 .popup-content {
-    background: #fff;
+    background: #001133;
     padding: 20px;
     border-radius: 15px;
     text-align: center;
@@ -1397,7 +1401,7 @@ video {
     right: 15px;
     font-size: 24px;
     cursor: pointer;
-    color: #333;
+    color: #ffffff;
     font-weight: bold;
     transition: color 0.2s;
 }
@@ -1473,7 +1477,7 @@ video {
     border-radius: 8px;
     font-size: 0.9em;
     font-weight: 500;
-    border-left: 4px solid #45c8e9;
+    border-left: 4px solid #ff3700 !important;
     animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -1628,4 +1632,12 @@ video {
 @keyframes settingsFade {
   from { transform: translateY(10px); opacity: 0; }
   to   { transform: translateY(0);   opacity: 1; }
+}
+
+#telegramPopup .popup-content {
+  animation: popupZoom 0.6s ease;
+}
+
+@keyframes popupZoom {
+  from {transform: scale(0.5); opacity: 0;} to {transform: scale(1); opacity: 1;}
 }
