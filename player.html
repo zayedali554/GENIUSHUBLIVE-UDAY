@@ -256,8 +256,8 @@ let hasRedirected = false;
 
 function isDevToolsOpen() {
     // Higher threshold to avoid false positives from browser UI or extensions
-    const widthThreshold = window.outerWidth - window.innerWidth > 500;
-    const heightThreshold = window.outerHeight - window.innerHeight > 500;
+    const widthThreshold = window.outerWidth - window.innerWidth > 800;
+    const heightThreshold = window.outerHeight - window.innerHeight > 800;
     return widthThreshold || heightThreshold;
 }
 
