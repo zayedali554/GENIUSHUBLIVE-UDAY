@@ -13,11 +13,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="chat.js"></script>
-    <script disable-devtool-auto="true" src="https://cdn.jsdelivr.net/npm/disable-devtool" clear-log="true"
+  <script disable-devtool-auto="true" src="https://cdn.jsdelivr.net/npm/disable-devtool" clear-log="true"
         disable-select="true" disable-copy="true" disable-cut="true" disable-paste="false"></script>
 </head>
-
 <body>
+
+    <svg width="0" height="0">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+      </svg>
 
  <div id="telegramPopup" class="popup">
         <div class="popup-content">
@@ -163,10 +174,6 @@
                             <input type="radio" name="speed" value="2">
                             <span>2x</span>
                         </label>
-                        <label class="option-item">
-                            <input type="radio" name="speed" value="4">
-                            <span>4x</span>
-                        </label>
                     </div>
                 </div>
             </div>
@@ -274,7 +281,7 @@ setTimeout(() => {
     // Start periodic checks after initial delay
     setInterval(checkDevTools, checkInterval);
 }, 1000);
-    </script> 
+    </script>
 
 </body>
 
