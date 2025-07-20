@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Genius Hub - UDAY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+   
+        <link rel="icon" type="image/png" sizes="any" href="https://gknodfvnbjkifcghajsf.supabase.co/storage/v1/object/sign/logo/logo.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9lMTI1ZTg2Ny04ODI1LTRmMDktOTExNS01YjYyZDZmMmNlYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvL2xvZ28uanBnIiwiaWF0IjoxNzUxNjk1MzQwLCJleHAiOjMzMjU2MTU5MzQwfQ.ZKq1SAE3ShgV9gZiFJTov9CV9vNBimARDqnXJwkjZW4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="chat.js"></script>
+  <script disable-devtool-auto="true" src="https://cdn.jsdelivr.net/npm/disable-devtool" clear-log="true"
+        disable-select="true" disable-copy="true" disable-cut="true" disable-paste="false"></script>
+</head>
+<body>
+
+    <svg width="0" height="0">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+      </svg>
+
+ <div id="telegramPopup" class="popup">
+        <div class="popup-content">
+            <span class="popup-close">×</span>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Icon" class="telegram-icon">
+            <h2>Join Our Telegram Channel!</h2>
+            <p>All lectures are uploaded here first !</p>
+            <a href="https://t.me/genius_hub_official_01" target="_blank" class="telegram-btn">Join Now</a>
+        </div>
+    </div>
+
+    <header>
+        <h1 class="title">Genius Hub</h1>
+    </header>
+    <div class="container1">
+        <div class="player-wrapper">
+            <div class="video-container">
+                <video id="video" playsinline preload="metadata" controls="false"></video>
+                <div class="video-watermark">https://t.me/genius_hub_official_01</div>
+                <div class="loading-screen" id="loadingScreen">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Loading Stream</div>
+                    <div class="loading-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="loading-progress">
+                        <div class="loading-progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="controls" id="controls" style="display:none">
+                <button id="playpause" title="Play/Pause">
+                    <svg id="icon-play" viewBox="0 0 24 24">
+                        <polygon points="6,4 20,12 6,20" />
+                    </svg>
+                    <svg id="icon-pause" viewBox="0 0 24 24" style="display:none">
+                        <rect x="6" y="4" width="4" height="16" />
+                        <rect x="14" y="4" width="4" height="16" />
+                    </svg>
+                </button>
+                <div class="rewind-forward">
+                    <button id="rewind" title="Rewind 10s">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                        </svg>
+                    </button>
+                    <button id="forward" title="Forward 10s">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
+                                transform="scale(-1, 1) translate(-24, 0)" />
+                        </svg>
+                    </button>
+                </div>
+                <span class="time" id="current">00:00</span>
+                <input type="range" id="seek" min="0" max="100" value="0">
+                <span class="time" id="duration">00:00</span>
+                <button id="settings" title="Settings">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" />
+                    </svg>
+                </button>
+                <button id="fullscreen" title="Fullscreen">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="2" />
+                        <rect x="3" y="3" width="2" height="7" />
+                        <rect x="14" y="3" width="7" height="2" />
+                        <rect x="19" y="3" width="2" height="7" />
+                        <rect x="3" y="19" width="7" height="2" />
+                        <rect x="3" y="14" width="2" height="7" />
+                        <rect x="14" y="19" width="7" height="2" />
+                        <rect x="19" y="14" width="2" height="7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings Menu -->
+        <div class="settings-menu" id="settingsMenu" style="display:none">
+            <div class="settings-content">
+                <div class="settings-main" id="settingsMain">
+                    <div class="settings-header">
+                        <h3>
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </h3>
+                        <button id="closeSettings" class="close-btn">×</button>
+                    </div>
+                    <div class="settings-option">
+                        <button class="menu-btn" data-target="qualityMenu" data-current="Auto">
+                            Quality: <span class="current-value">Auto</span>
+                        </button>
+                    </div>
+                    <div class="settings-option">
+                        <button class="menu-btn" data-target="speedMenu" data-current="Normal">
+                            Speed: <span class="current-value">Normal</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="settings-submenu" id="qualityMenu" style="display:none">
+                    <div class="submenu-header" data-action="back">
+                        <i class="fas fa-arrow-left"></i>
+                        <h3>Quality</h3>
+                    </div>
+                    <div class="submenu-options" id="qualityOptions">
+                        <label class="option-item">
+                            <input type="radio" name="quality" value="auto" checked>
+                            <span>Auto</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-submenu" id="speedMenu" style="display:none">
+                    <div class="submenu-header" data-action="back">
+                        <i class="fas fa-arrow-left"></i>
+                        <h3>Speed</h3>
+                    </div>
+                    <div class="submenu-options" id="speedOptions">
+                        <label class="option-item">
+                            <input type="radio" name="speed" value="0.5">
+                            <span>0.5x</span>
+                        </label>
+                        <label class="option-item">
+                            <input type="radio" name="speed" value="0.75">
+                            <span>0.75x</span>
+                        </label>
+                        <label class="option-item">
+                            <input type="radio" name="speed" value="1" checked>
+                            <span>Normal</span>
+                        </label>
+                        <label class="option-item">
+                            <input type="radio" name="speed" value="1.25">
+                            <span>1.25x</span>
+                        </label>
+                        <label class="option-item">
+                            <input type="radio" name="speed" value="1.5">
+                            <span>1.5x</span>
+                        </label>
+                        <label class="option-item">
+                            <input type="radio" name="speed" value="2">
+                            <span>2x</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </div>
+
+
+    <!-- Username Modal -->
+    <div id="username-modal" class="modal">
+        <div class="modal-content">
+            <h2>Enter Your Name</h2>
+            <input type="text" id="username-input" placeholder="This Name Will Show On Chat">
+            <button id="username-submit">Submit</button>
+        </div>
+    </div>
+
+    <!-- Change Username Modal -->
+    <div id="change-username-modal" class="modal">
+        <div class="modal-content">
+            <h2>Change Your Name</h2>
+            <input type="text" id="change-username-input" placeholder="Enter New Name">
+            <div class="modal-buttons">
+                <button id="change-username-update">Update</button>
+                <button id="change-username-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="video-chat-wrapper">
+            <button id="scroll-to-bottom-btn" class="scroll-to-bottom-btn" title="Scroll to Bottom">
+                <i class="fas fa-arrow-down"></i>
+            </button>
+
+
+            <div class="live-chat">
+                <div class="chat-header">
+                    <h3>Live Chat <i class="fas fa-chevron-up collapse-icon"></i></h3>
+                    <span id="online-count"><i class="fa-solid fa-user-group"></i>&nbsp;0 Live</span>
+                </div>
+                <div id="pinned-message-container" class="pinned-message-container"></div>
+                <div id="poll-container" class="poll-container"></div>
+                <div class="chat-messages" id="chat-messages">
+                </div>
+                <button id="scroll-to-bottom-btn" class="scroll-to-bottom-btn" title="Scroll to Bottom">
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+                <div class="chat-form">
+                    <i id="change-username-icon" class="fas fa-user-edit current-username"></i>
+                    <input type="text" id="message-input" placeholder="Chat Now...">
+                    <button id="send-button" class="chat-button"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="https://t.me/GENIUS_HUB_OWNER_BOT" target="_blank" class="button">Contact Us</a>
+        <a href="https://t.me/pwuday2026" target="_blank" class="button">Uday 2026</a>
+        <a href="https://t.me/genius_hub_official_01" target="_blank" class="button">Backup</a>
+    </div>
+
+    <!-- Cooldown Popup -->
+    <div class="cooldown-popup" id="cooldown-popup">
+        <div class="cooldown-content">
+            <div class="cooldown-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <h2 class="cooldown-title">Username Change Cooldown</h2>
+            <p class="cooldown-message">You need to wait before changing your username again.</p>
+            <div class="cooldown-timer" id="cooldown-timer"></div>
+            <button class="cooldown-button" id="cooldown-ok-button">Got It!</button>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 <a href="https://t.me/genius_hub_official_01">Genius Hub</a>. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+<script>
+const redirectUrl = 'https://t.me/genius_hub_official_01';
+const checkInterval = 500;
+let hasRedirected = false;
+
+function isDevToolsOpen() {
+    // Higher threshold to avoid false positives from browser UI or extensions
+    const widthThreshold = window.outerWidth - window.innerWidth > 800;
+    const heightThreshold = window.outerHeight - window.innerHeight > 800;
+    return widthThreshold || heightThreshold;
+}
+
+function checkDevTools() {
+    if (isDevToolsOpen() && !hasRedirected) {
+        hasRedirected = true;
+        window.location.replace(redirectUrl);
+    }
+}
+
+// Delay initial check to allow window sizes to stabilize
+setTimeout(() => {
+    checkDevTools();
+    // Start periodic checks after initial delay
+    setInterval(checkDevTools, checkInterval);
+}, 1000);
+    </script>
+
+</body>
+
+</html>

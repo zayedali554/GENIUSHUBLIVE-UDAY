@@ -1,0 +1,6 @@
+[build]
+  command = "" # Leave empty for static sites
+  publish = "." # Set to "frontend" or "dist" if applicable
+  base = "" # Set to "frontend" if files are in a subdirectory
+[build.environment]
+  NODE_ENV = "development" # Disable minification
