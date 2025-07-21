@@ -562,7 +562,7 @@ video {
 }
 
 .message:first-child {
-  margin-top: -20px;
+  margin-top: 2px;
 }
 
 .message-username {
